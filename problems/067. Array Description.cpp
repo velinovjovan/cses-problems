@@ -1,82 +1,58 @@
 #include<bits/stdc++.h>
-
+ 
 using namespace std;
-
+ 
+const long long mod = 1e9 + 7;
+ 
 int main(){
 	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	cin.tie(nullptr);
 	
-	const int MOD = 1000000007;
-
 	int n, m;
 	cin >> n >> m;
-
+	
 	vector<int> a (n);
-
+	
 	for(int i = 0 ; i < n ; ++i){
 		cin >> a[i];
 	}
-
-	vector<vector<int>> dp (n, vector<int> (m + 1, 0));
-
-	if(a[0] == 0){
-		for(int j = 1 ; j <= m ; ++j){
+	
+	vector<vector<long long>> dp (n, vector<long long> (m + 1, 0));
+	
+	for(int j = 1 ; j <= m ; ++j){
+		if(a[0] == 0 || a[0] == j){
 			dp[0][j] = 1;
 		}
 	}
-	else{
-		dp[0][a[0]] = 1;
-	}
-
+	
 	for(int i = 1 ; i < n ; ++i){
-		if(a[i] == 0){
-			for(int j = 1 ; j <= m ; ++j){
-				dp[i][j] = dp[i - 1][j];
-
-				if(j > 1){
-					dp[i][j] += dp[i - 1][j - 1];
-					dp[i][j] %= MOD;
-				}
-
-				if(j < m){
-					dp[i][j] += dp[i - 1][j + 1];
-					dp[i][j] %= MOD;
-				}
+		for(int j = 1 ; j <= m ; ++j){
+			if(a[i] != 0 && a[i] != j){
+				continue;
 			}
-		}
-		else{
-			int j = a[i];
-
+			
 			dp[i][j] = dp[i - 1][j];
-
+			
 			if(j > 1){
 				dp[i][j] += dp[i - 1][j - 1];
-				dp[i][j] %= MOD;
 			}
-
+			
 			if(j < m){
 				dp[i][j] += dp[i - 1][j + 1];
-				dp[i][j] %= MOD;
 			}
+			
+			dp[i][j] %= mod;
 		}
 	}
-
+	
 	long long ans = 0;
-
-	if(a[n - 1] == 0){
-		for(int j = 1 ; j <= m ; ++j){
-			ans += dp[n - 1][j];
-			ans %= MOD;
-		}
+	
+	for(int j = 1 ; j <= m ; ++j){
+		ans += dp[n - 1][j];
+		ans %= mod;
 	}
-	else{
-		ans = dp[n - 1][a[n - 1]];
-	}
-
+	
 	cout << ans;
 	
-
 	return 0;
-
 }
