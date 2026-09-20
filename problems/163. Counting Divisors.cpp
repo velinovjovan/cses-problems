@@ -2,22 +2,9 @@
 
 using namespace std;
 
-const int MAX = 1000000;
-int divisors[MAX + 1];
-
-void precompute() {
-    for (int i = 1; i <= MAX; ++i) {
-        for (int j = i; j <= MAX; j += i) {
-            divisors[j]++;
-        }
-    }
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    precompute();
 
     int n;
     cin >> n;
@@ -25,7 +12,28 @@ int main() {
     while (n--) {
         int a;
         cin >> a;
-        cout << divisors[a] << "\n";
+        vector<int> powers;
+        for(int i = 2 ; i * i <= a ; ++i){
+        	int count = 0;
+			
+			while(a % i == 0){
+        		a /= i;	
+        		count ++;
+			}
+			
+			if(count > 0) powers.push_back(count);
+		}
+		if(a > 1){
+			powers.push_back(1);
+		}
+		
+		long long ans = 1;
+		
+		for(auto &num : powers){
+			ans *= (num + 1);
+		}
+		
+		cout << ans << "\n";
     }
 
     return 0;
